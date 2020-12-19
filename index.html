@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特效</title>
+    <style>
+        #content {
+            width: 700px;
+            margin: auto;
+        }
+
+        #clock {
+            font-size: 25px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #album {
+            margin-top: 20px;
+            height: 500px;
+        }
+
+        .box {
+            float: left;
+            height: 500px;
+            text-align: center;
+            line-height: 500px;
+        }
+
+        #left {
+            width: 100px;
+        }
+
+        #right {
+            width: 100px;
+        }
+
+        #language {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="content">
+        <div id="clock"></div>
+
+        <div id="album">
+            <div id="left" class="box">
+                <img src="img/left.png" width="100px" />
+            </div>
+            <div class="box">
+                <img id="pic" src="img/java.jpg" width="500px" height="500px" />
+            </div>
+            <div id="right" class="box">
+                <img src="img/right.png" width="100px" />
+            </div>
+        </div>
+
+        <div id="language">
+            <input name="language" type="radio" value="java" />
+            <label for="language">java</label>
+            <input name="language" type="radio" value="c" />
+            <label for="language">c</label>
+            <input name="language" type="radio" value="go" />
+            <label for="language">go</label>
+            <input name="language" type="radio" value="js" />
+            <label for="language">js</label>
+        </div>
+
+    </div>
+
+
+    <script>
+
+        onload = function () {
+            displayTime();
+            setInterval(displayTime, 1000);
+            let $html = document.getElementsByTagName("html")[0];
+            let $body = document.getElementsByTagName("body")[0];
+            $html.onclick = function (e) {
+                let $elem = document.createElement("b");
+                $elem.style.color = "#E94F06";
+                $elem.style.zIndex = 9999;
+                $elem.style.position = "absolute";
+                $elem.style.select = "none";
+                let x = e.pageX;
+                let y = e.pageY;
+                $elem.style.left = (x - 20) + "px";
+                $elem.style.top = (y - 20) + "px";
+                clearInterval(anim);
+                $elem.innerText = "❤";
+                $elem.style.fontSize = Math.random() * 10 + 8 + "px";
+                let increase = 0;
+                var anim;
+                setTimeout(function () {
+                    anim = setInterval(function () {
+                        if (++increase == 150) {
+                            clearInterval(anim);
+                            $body.removeChild($elem);
+                        }
+                        $elem.style.top = y - 20 - increase + "px";
+                        $elem.style.opacity = (150 - increase) / 120;
+                    }, 10);
+                }, 70);
+                $body.appendChild($elem);
+            };
+        };
+
+        function checkVal(val) {
+            if (val < 10) {
+                return ("0" + val);
+            }
+            else {
+                return (val);
+            }
+        }
+
+        function displayTime() {
+            let clock = document.getElementById("clock");
+            //获取系统当前的年、月、日、小时、分钟、毫秒
+            let date = new Date();
+            let year = date.getFullYear();
+            let month = date.getMonth() + 1;
+            let day = date.getDate();
+            let hour = date.getHours();
+            let minutes = date.getMinutes();
+            let second = date.getSeconds();
+            var timestr = year + "年" + month + "月" + day + "日  " +
+                checkVal(hour) + ":" + checkVal(minutes) + ":" + checkVal(second);
+            //将系统时间设置到div元素中
+            clock.innerText = timestr;
+        }
+
+        let pics = ["img/java.jpg", "img/c.jpg", "img/go.jpg", "img/js.jpg"];
+        let ln = pics.length;
+        let left = document.getElementById("left");
+        let right = document.getElementById("right");
+        let pic = document.getElementById("pic");
+        let radios = document.getElementsByName("language")
+        let index = 0;
+        pic.src = pics[index];
+
+        left.onclick = function () {
+            index--;
+            if (index < 0) {
+                index = ln - 1;
+            }
+            pic.src = pics[index];
+            radios[index].checked = true;
+        };
+
+        right.onclick = function () {
+            index++;
+            if (index == ln) {
+                index = 0;
+            }
+            pic.src = pics[index];
+            radios[index].checked = true;
+        };
+
+        document.getElementById("language").addEventListener("click", function (e) {
+            if (e.target.tagName == "INPUT") {
+                let va = e.target.value;
+                switch (va) {
+                    case "java":
+                        index = 0;
+                        break;
+                    case "c":
+                        index = 1;
+                        break;
+                    case "go":
+                        index = 2;
+                        break;
+                    case "js":
+                        index = 3;
+                        break;
+                }
+                pic.src = pics[index];
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>
